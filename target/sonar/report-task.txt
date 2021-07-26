@@ -3,5 +3,5 @@ projectKey=renatoseb_examen-final-software
 serverUrl=https://sonarcloud.io
 serverVersion=8.0.0.22079
 dashboardUrl=https://sonarcloud.io/dashboard?id=renatoseb_examen-final-software
-ceTaskId=AXrkTO1qRTprvxMfpIaU
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AXrkTO1qRTprvxMfpIaU
+ceTaskId=AXrkmuDtr7WCwZj2bvC9
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AXrkmuDtr7WCwZj2bvC9

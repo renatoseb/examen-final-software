@@ -14,6 +14,10 @@ public class VacSys {
         this.users = new HashMap<>();
         this.centros = new ArrayList<>();
         this.users.put("renatoseb", user);
+        var centroComas = new CentroVac("Comas");
+        var centroOlivos = new CentroVac("Los Olivos");
+        this.centros.add(centroComas);
+        this.centros.add(centroOlivos);
     }
 
     public static synchronized VacSys getInstance() {
@@ -43,16 +47,18 @@ public class VacSys {
     
     public void seeOptions() {
         Boolean flag = true;
-        while(flag) {
+        while(Boolean.TRUE.equals(flag)) {
             var input = new Scanner(System.in);
-            var block = """     
+            var block = """
                     -------- BIENVENIDO --------
-                    1. Avance de la Vacunación 
-                    2. Cobertura de la Vacunación 
-                    3. Número de Centros de Vacunación 
-                    4. Número de personas vacunadas parcialmente 
-                    5. Número de personas vacunadas completamente 
-                    6. Salir del sistema
+                    1. Avance de la Vacunación
+                    2. Cobertura de la Vacunación
+                    3. Número de Centros de Vacunación
+                    4. Número de personas vacunadas parcialmente
+                    5. Número de personas vacunadas completamente
+                    6. Dar de baja centro de vacunación
+                    7. Dar de alta centro de vacunación
+                    8. Salir del sistema
                     -----------------------------
                     """;
             logger.info(block);
@@ -75,6 +81,12 @@ public class VacSys {
                     verNroPersonasVacComp();
                     break;
                 case 6:
+                    darBajaCentro();
+                    break;
+                case 7:
+                    darAltaCentro();
+                    break;
+                case 8:
                     flag = false;
                     break;
                 default:
@@ -86,15 +98,28 @@ public class VacSys {
     }
 
     private void verNroPersonasVacComp() {
-        logger.info("not implemented verNroPersonasVacComp");
+        var total = 0;
+        for(var i = 0; i < this.centros.size(); ++i) {
+            if (this.centros.get(i).getActive())
+                total += this.centros.get(i).getTotal();
+        }
+        String out = "Existen un total de " + total + " vacunadas completamente.";
+        logger.info(out);
     }
 
     private void verNroPersonasVacParc() {
-        logger.info("not implemented verNroPersonasVacParc");
+        var total = 0;
+        for(var i = 0; i < this.centros.size(); ++i) {
+            if (this.centros.get(i).getActive())
+                total += this.centros.get(i).getPersVacParc();
+        }
+        String out = "Existen un total de " + total + " vacunadas parcialmente.";
+        logger.info(out);
     }
 
     private void verNroCentroVac() {
-        logger.info("not implemented verNroCentroVac");
+        String out = "Existen un total de: " + this.centros.size() + " centro de vacunación.";
+        logger.info(out);
     }
 
     private void verCoberturaVacunacion() {
@@ -104,9 +129,43 @@ public class VacSys {
     private void verAvanceVacunacion() {
         var total = 0;
         for(var i = 0; i < this.centros.size(); ++i) {
-            total += this.centros.get(i).getTotal();
+            if (this.centros.get(i).getActive())
+                total += this.centros.get(i).getTotal();
         }
-        logger.info(String.valueOf(total));
+        String out = "Existen un total de " + total + " vacunados.";
+        logger.info(out);
+    }
+
+    private void darBajaCentro() {
+        for(var i = 0; i < this.centros.size(); ++i) {
+            if (this.centros.get(i).getActive()) {
+                String text = i + ". " + this.centros.get(i).getName();
+                logger.info(text);
+            }
+        }
+        logger.info("Ingrese el número del centro de vacunación que quiere dar de baja.");
+
+        var input = new Scanner(System.in);
+        var numberCentro = input.nextInt();
+        this.centros.get(numberCentro).darBaja();
+
+        logger.info("Centro dado de baja!");
+    }
+
+    private void darAltaCentro() {
+        for(var i = 0; i < this.centros.size(); ++i) {
+            if (!this.centros.get(i).getActive()) {
+                String text = i + ". " + this.centros.get(i).getName();
+                logger.info(text);
+            }
+        }
+        logger.info("Ingrese el número del centro de vacunación que quiere dar de alta.");
+
+        var input = new Scanner(System.in);
+        var numberCentro = input.nextInt();
+        this.centros.get(numberCentro).darAlta();
+
+        logger.info("Centro dado de alta!");
     }
 
     public boolean authUser(String username, String password) {
